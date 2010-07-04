@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>Author</key>
-	<string>Jeveaux</string>
+	<string>Tom Armitage</string>
 	<key>CFBundleDisplayName</key>
-	<string>delicious</string>
+	<string>delicious-bookmarker</string>
 	<key>CFBundleIdentifier</key>
-	<string>br.com.giran.safari.delicious</string>
+	<string>org.infovore.safari.delicious</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleShortVersionString</key>
-	<string>1.0</string>
+	<string>1.1</string>
 	<key>CFBundleVersion</key>
-	<string>1</string>
+	<string>2</string>
 	<key>Chrome</key>
 	<dict>
 		<key>Global Page</key>
@@ -47,7 +47,7 @@
 		</dict>
 	</dict>
 	<key>Description</key>
-	<string>Save your bookmarks</string>
+	<string>Simple extension to save bookmarks (with thanks to jeveaux.com)</string>
 	<key>ExtensionInfoDictionaryVersion</key>
 	<string>1.0</string>
 	<key>Permissions</key>
@@ -61,6 +61,6 @@
 		</dict>
 	</dict>
 	<key>Website</key>
-	<string>http://www.jeveaux.com</string>
+	<string>http://infovore.org</string>
 </dict>
 </plist>
