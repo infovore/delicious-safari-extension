@@ -1,31 +1,83 @@
-<html>
+<!DOCTYPE html>
+<title>Delicious</title>
+<script type="text/javascript">
 
-<head>
-</head>
+Delicious = new Object; // I'm not sure, do we need to namespace work?
 
-<script>
-	function performCommand(event) {
+Delicious.itemURL = '';
+Delicious.itemTitle = '';
+Delicious.itemDescription = '';
 
-	    if (event.command === "DeliciousToolbarItem") {
-			var currentTabUrl = encodeURIComponent(safari.application.activeBrowserWindow.activeTab.url);
-			var currentTabTitle = encodeURIComponent(safari.application.activeBrowserWindow.activeTab.title);
+/*
+ * seems like eventually it'd be nice to have a toggle between using the inline or popup
+ */
+Delicious.openDeliciousWindow = function() {
 
-			var deliciousTab = safari.application.activeBrowserWindow.openTab();
-			deliciousTab.url = 'http://delicious.com/save?v=5&noui&jump=close&url='+currentTabUrl+'&title='+currentTabTitle;
+  /* as a heads up, the itemDescription is already URI encoded when 
+   * passed back from the message event listener
+   */
+  var deliciousTab = safari.application.activeBrowserWindow.openTab();
+  var url = 'http://delicious.com/save?v=5&noui&jump=close&url='+encodeURIComponent(Delicious.itemURL)+'&title='+encodeURIComponent(Delicious.itemTitle) +'&notes='+Delicious.itemDescription;
+  deliciousTab.url = url;
+};
 
-	    }
-	}
- 
-	function validateCommand(event) {
-	    if (event.command === "DeliciousToolbarItem") {
-	        // Disable the button if there is no URL loaded in the tab.
-	        event.target.disabled = !event.target.browserWindow.activeTab.url;
-	    }
-	}
+Delicious.performCommand = function(event)
+{
+  if (event.command === 'DeliciousToolbarItem')
+  {
+    // Get the current tab's URL
+    var itemUrl = event.target.browserWindow.activeTab.url; 
+    // There's nothing to do if there's no URL
+	if (itemUrl)
+	{        
+	  Delicious.itemURL = safari.application.activeBrowserWindow.activeTab.url;
+    Delicious.itemTitle = safari.application.activeBrowserWindow.activeTab.title;     
+      /*
+       * dispatch a message to the current page where an injected script is listening
+       */
+      event.target.browserWindow.activeTab.page.dispatchMessage("getSelection","");
+    }
+  }
+  else
+  {  
+    // unknown command
+    return;
+  }  
+}
 
-	
-	safari.application.addEventListener("command", performCommand, false);
-	safari.application.addEventListener("validate", validateCommand, false);
+Delicious.validateCommand = function(event)
+{
+  if (event.command === 'DeliciousToolbarItem') {
+    event.target.disabled = !event.target.browserWindow.activeTab.url;
+  }
+  else
+  {
+    // unknown command
+    return;  
+  }
+}
+
+Delicious.respondToMessage = function(messageEvent)
+{
+  if(messageEvent.name === "getSelection")
+  {
+    /*
+     * receives a message from the current page where the injected text selection script is listening
+     */
+     
+    Delicious.itemDescription = String(messageEvent.message);
+    Delicious.openDeliciousWindow();
+    return;
+  }
+  else
+  {
+    //unknown messageEvent
+    return 
+  }
+}
+
+safari.application.addEventListener("message",Delicious.respondToMessage,false);
+safari.application.addEventListener('command',Delicious.performCommand, false);
+safari.application.addEventListener('validate',Delicious.validateCommand, false);
+
 </script>
-
-</html>

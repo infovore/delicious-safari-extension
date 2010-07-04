@@ -39,7 +39,12 @@
 	<key>Content</key>
 	<dict>
 		<key>Scripts</key>
-		<dict/>
+		<dict>
+			<key>Start</key>
+			<array>
+				<string>delicious_extension_get_text.js</string>
+			</array>
+		</dict>
 	</dict>
 	<key>Description</key>
 	<string>Save your bookmarks</string>
